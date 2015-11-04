@@ -23,8 +23,10 @@ import javax.swing.JRadioButton;
 
 import org.omg.CORBA.FREE_MEM;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import javax.swing.SwingConstants;
+import javax.swing.JScrollPane;
 
 public class ClientGui extends JFrame {
 
@@ -76,6 +78,7 @@ public class ClientGui extends JFrame {
 		panel_1.setLayout(new BoxLayout(panel_1, BoxLayout.Y_AXIS));
 		
 		JButton btnNewButton = new JButton();
+		
 		btnNewButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 		btnNewButton.setIcon(new ImageIcon(ClientGui.class.getResource("/img/axw.png")));
 		btnNewButton.setBorderPainted(false);
@@ -96,35 +99,44 @@ public class ClientGui extends JFrame {
 		panel_1.add(panel_2);
 		panel_2.setLayout(new BoxLayout(panel_2, BoxLayout.Y_AXIS));
 		
-		JPanel panel_6 = new JPanel();
-		panel_6.setBackground(new Color(135, 206, 250));
-		panel_2.add(panel_6);
-		panel_6.setLayout(new BoxLayout(panel_6, BoxLayout.Y_AXIS));
-		
 		JPanel panel_3 = new JPanel();
-		FlowLayout flowLayout = (FlowLayout) panel_3.getLayout();
-		panel_6.add(panel_3);
+		panel_2.add(panel_3);
 		panel_3.setBackground(new Color(135, 206, 250));
+		panel_3.setLayout(null);
 		
-		JLabel lblIp = new JLabel("I.P   ");
+		JLabel lblIp = new JLabel("I.P");
+		lblIp.setFont(new Font("Nexa Light", Font.PLAIN, 11));
+		lblIp.setBounds(10, 8, 23, 14);
 		panel_3.add(lblIp);
 		lblIp.setForeground(Color.WHITE);
 		
-		ipTextField = new JTextField("192.168.20.249");
+		ipTextField = new JTextFieldLimit(14);
+		ipTextField.setBounds(30, 5, 86, 20);
 		panel_3.add(ipTextField);
 		ipTextField.setColumns(10);
 		
-		JPanel ipPortPanel = new JPanel();
-		panel_6.add(ipPortPanel);
-		ipPortPanel.setBackground(new Color(135, 206, 250));
+		portTextField = new JTextFieldLimit(4);
+		portTextField.setBounds(136, 5, 38, 20);
+		panel_3.add(portTextField);
+		portTextField.setColumns(4);
 		
-		JLabel lblPort = new JLabel("PORT");
+		JLabel lblPort = new JLabel("P");
+		lblPort.setFont(new Font("Nexa Light", Font.PLAIN, 11));
+		lblPort.setBounds(126, 8, 13, 14);
+		panel_3.add(lblPort);
 		lblPort.setForeground(Color.WHITE);
-		ipPortPanel.add(lblPort);
 		
-		portTextField = new JTextField("8080");
-		ipPortPanel.add(portTextField);
-		portTextField.setColumns(10);
+		JPanel panel_6 = new JPanel();
+		panel_6.setBackground(new Color(135, 206, 250));
+		panel_2.add(panel_6);
+		panel_2.setVisible(false);
+		panel_6.setLayout(new BoxLayout(panel_6, BoxLayout.Y_AXIS));
+		
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				panel_2.setVisible(true);
+			}
+		});
 		
 		
 		
@@ -151,20 +163,49 @@ public class ClientGui extends JFrame {
 		};
 		
 		JPanel errorMsgPanel = new JPanel();
-		FlowLayout flowLayout_3 = (FlowLayout) errorMsgPanel.getLayout();
-		flowLayout_3.setVgap(1);
 		errorMsgPanel.setBackground(new Color(135, 206, 250));
 		panel_2.add(errorMsgPanel);
+		errorMsgPanel.setLayout(null);
 		
 		searchingJLabel = new JLabel("");
+		searchingJLabel.setBounds(92, 1, 0, 0);
 		searchingJLabel.setForeground(Color.BLACK);
 		searchingJLabel.setFont(new Font("Tahoma", Font.BOLD, 10));
 		errorMsgPanel.add(searchingJLabel);
 		
 		errorMessageJLabel = new ErrorJLabel(""); 
+		errorMessageJLabel.setBounds(97, 1, 0, 0);
 		errorMessageJLabel.setFont(new Font("Tahoma", Font.BOLD, 12));
 		errorMessageJLabel.setForeground(Color.RED);
 		errorMsgPanel.add(errorMessageJLabel);
+		
+		JPanel delayPanel = new JPanel();
+		delayPanel.setBackground(new Color(135, 206, 250));
+		panel_2.add(delayPanel);
+		delayPanel.setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("");
+		lblNewLabel.setBounds(22, 0, 50, 50);
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setIcon(new ImageIcon(ClientGui.class.getResource("/img/time.png")));
+		delayPanel.add(lblNewLabel);
+		
+		delayTextField = new JTextFieldLimit(2);
+		delayTextField.setBounds(137, 18, 22, 20);
+		delayTextField.setHorizontalAlignment(SwingConstants.CENTER);
+		delayPanel.add(delayTextField);
+		delayTextField.setColumns(2);
+		
+		JLabel lblNewLabel_2 = new JLabel("Delay ms");
+		lblNewLabel_2.setFont(new Font("Nexa Light", Font.PLAIN, 11));
+		lblNewLabel_2.setForeground(Color.WHITE);
+		lblNewLabel_2.setBounds(77, 22, 50, 14);
+		delayPanel.add(lblNewLabel_2);
+		
+		JPanel panel_8 = new JPanel();
+		panel_8.setBackground(new Color(135, 206, 250));
+		panel_2.add(panel_8);
+		panel_8.setLayout(null);
 		
 		JPanel radioButtonPanel = new JPanel();
 		radioButtonPanel.setBackground(new Color(135, 206, 250));
@@ -176,19 +217,20 @@ public class ClientGui extends JFrame {
 		radioButtonPanel.add(lblNewLabel_1);
 		lblNewLabel_1.setIcon(new ImageIcon(ClientGui.class.getResource("/img/screen.png")));
 		
+		ButtonGroup group = new ButtonGroup();
+		
 		res2NewRadioButton_1 = new JRadioButton("R2");
 		
 		res3NewRadioButton_2 = new JRadioButton("R3");
 		
 		res4NewRadioButton_3 = new JRadioButton("R4");
 		
-		ButtonGroup group = new ButtonGroup();
-		
 		JPanel panel_4 = new JPanel();
-		radioButtonPanel.add(panel_4);
+		panel_2.add(panel_4);
 		panel_4.setLayout(new BoxLayout(panel_4, BoxLayout.X_AXIS));
 		
 		res1NewRadioButton = new JRadioButton("R1");
+		
 		panel_4.add(res1NewRadioButton);
 		panel_4.add(res2NewRadioButton_1);
 		panel_4.add(res3NewRadioButton_2);
@@ -208,48 +250,42 @@ public class ClientGui extends JFrame {
 		group.add(res4NewRadioButton_3);
 		res1NewRadioButton.setSelected(true);
 		
-		JPanel delayPanel = new JPanel();
-		FlowLayout flowLayout_1 = (FlowLayout) delayPanel.getLayout();
-		flowLayout_1.setVgap(20);
-		delayPanel.setBackground(new Color(135, 206, 250));
-		panel_2.add(delayPanel);
-		
-		JLabel lblNewLabel = new JLabel("");
-		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setIcon(new ImageIcon(ClientGui.class.getResource("/img/time.png")));
-		delayPanel.add(lblNewLabel);
-		
-		delayTextField = new JTextFieldLimit(2);
-		delayTextField.setHorizontalAlignment(SwingConstants.CENTER);
-		delayPanel.add(delayTextField);
-		delayTextField.setColumns(2);
-		
 		JPanel panel_7 = new JPanel();
 		panel_7.setBackground(new Color(135, 206, 250));
 		panel_2.add(panel_7);
+		panel_7.setLayout(null);
 		
 		JButton btnNewButton_1 = new JButton("Connect");
-		btnNewButton_1.setEnabled(false);
+		btnNewButton_1.setFont(new Font("Nexa Light", Font.PLAIN, 11));
+		btnNewButton_1.setBounds(27, 11, 120, 49);
+	
 		btnNewButton_1.setBackground(Color.WHITE);
 		btnNewButton_1.setForeground(Color.WHITE);
 		btnNewButton_1.setContentAreaFilled(false); 
 	    btnNewButton_1.setBorder(null);
 	
-		btnNewButton_1.setIcon(new ImageIcon(ClientGui.class.getResource("/img/checkbutt.png")));
+		btnNewButton_1.setIcon(new ImageIcon(ClientGui.class.getResource("/img/connec.png")));
 		panel_7.add(btnNewButton_1);
+		
 		
 		JPanel panel = new JPanel();
 		panel.setBackground(Color.BLACK);
-		contentPane.add(panel, BorderLayout.CENTER);
-		panel.setLayout(new GridLayout(1, 0, 20, 1));
 		
-	
-		btnNewButton.addActionListener(new ActionListener() {
+		panel.setLayout(new GridLayout(0, 3, 20, 20));
+		
+		
+		  panel.setSize(new Dimension(900, 600));
+		
+		  final JScrollPane scroll = new JScrollPane(panel);
+		  contentPane.add(scroll, BorderLayout.CENTER);
+		
+		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (searching) return;
 				searchingJLabel.setText("Searching..."); 		//might need to put these into SwingWorker thread
 				
 				searching = true;
+				panel_2.setVisible(false);
 				new Thread(new Runnable() {
 				    public void run() {
 				    	Socket serverSocket = null;
@@ -284,6 +320,11 @@ public class ClientGui extends JFrame {
 				
 			}
 		});
+	
+		
+	
+		
+	
 		
 	}
 	
@@ -303,8 +344,8 @@ public class ClientGui extends JFrame {
 		button.setSelectedIcon(TbuttonIcon);
 		button.setBackground(new Color(135, 206, 250));
 		button.setForeground(Color.WHITE);
+		button.setFont(new Font("Nexa Light", Font.PLAIN, 11));
 		
 		return button;
 	}
-
 }
