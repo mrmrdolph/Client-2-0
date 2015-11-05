@@ -90,9 +90,22 @@ public class ClientGui extends JFrame {
 	
 		panel_1.add(btnNewButton);
 		
-		JPanel panel_5 = new JPanel();
-		panel_5.setBackground(new Color(135, 206, 250));
-		panel_1.add(panel_5);
+		JPanel errorMsgPanel = new JPanel();
+		panel_1.add(errorMsgPanel);
+		errorMsgPanel.setBackground(new Color(135, 206, 250));
+		errorMsgPanel.setLayout(null);
+		
+		searchingJLabel = new JLabel("");
+		searchingJLabel.setBounds(70, 11, 42, 13);
+		searchingJLabel.setForeground(Color.BLACK);
+		searchingJLabel.setFont(new Font("Tahoma", Font.BOLD, 10));
+		errorMsgPanel.add(searchingJLabel);
+		
+		errorMessageJLabel = new ErrorJLabel("");
+		errorMessageJLabel.setBounds(10, 11, 164, 39);
+		errorMessageJLabel.setFont(new Font("Tahoma", Font.BOLD, 10));
+		errorMessageJLabel.setForeground(Color.RED);
+		errorMsgPanel.add(errorMessageJLabel);
 		
 		JPanel panel_2 = new JPanel();
 		panel_2.setBackground(new Color(135, 206, 250));
@@ -125,6 +138,10 @@ public class ClientGui extends JFrame {
 		lblPort.setBounds(126, 8, 13, 14);
 		panel_3.add(lblPort);
 		lblPort.setForeground(Color.WHITE);
+		
+		JPanel panel_5 = new JPanel();
+		panel_2.add(panel_5);
+		panel_5.setBackground(new Color(135, 206, 250));
 		
 		JPanel panel_6 = new JPanel();
 		panel_6.setBackground(new Color(135, 206, 250));
@@ -162,23 +179,6 @@ public class ClientGui extends JFrame {
 			}
 		};
 		
-		JPanel errorMsgPanel = new JPanel();
-		errorMsgPanel.setBackground(new Color(135, 206, 250));
-		panel_2.add(errorMsgPanel);
-		errorMsgPanel.setLayout(null);
-		
-		searchingJLabel = new JLabel("");
-		searchingJLabel.setBounds(92, 1, 0, 0);
-		searchingJLabel.setForeground(Color.BLACK);
-		searchingJLabel.setFont(new Font("Tahoma", Font.BOLD, 10));
-		errorMsgPanel.add(searchingJLabel);
-		
-		errorMessageJLabel = new ErrorJLabel(""); 
-		errorMessageJLabel.setBounds(97, 1, 0, 0);
-		errorMessageJLabel.setFont(new Font("Tahoma", Font.BOLD, 12));
-		errorMessageJLabel.setForeground(Color.RED);
-		errorMsgPanel.add(errorMessageJLabel);
-		
 		JPanel delayPanel = new JPanel();
 		delayPanel.setBackground(new Color(135, 206, 250));
 		panel_2.add(delayPanel);
@@ -190,7 +190,7 @@ public class ClientGui extends JFrame {
 		lblNewLabel.setIcon(new ImageIcon(ClientGui.class.getResource("/img/time.png")));
 		delayPanel.add(lblNewLabel);
 		
-		delayTextField = new JTextFieldLimit(2);
+		delayTextField = new JTextFieldLimit(4);
 		delayTextField.setBounds(137, 18, 22, 20);
 		delayTextField.setHorizontalAlignment(SwingConstants.CENTER);
 		delayPanel.add(delayTextField);
@@ -250,6 +250,10 @@ public class ClientGui extends JFrame {
 		group.add(res4NewRadioButton_3);
 		res1NewRadioButton.setSelected(true);
 		
+		JPanel panel_9 = new JPanel();
+		panel_9.setBackground(new Color(135, 206, 250));
+		panel_2.add(panel_9);
+		
 		JPanel panel_7 = new JPanel();
 		panel_7.setBackground(new Color(135, 206, 250));
 		panel_2.add(panel_7);
@@ -257,7 +261,7 @@ public class ClientGui extends JFrame {
 		
 		JButton btnNewButton_1 = new JButton("Connect");
 		btnNewButton_1.setFont(new Font("Nexa Light", Font.PLAIN, 11));
-		btnNewButton_1.setBounds(27, 11, 120, 49);
+		btnNewButton_1.setBounds(31, 0, 120, 49);
 	
 		btnNewButton_1.setBackground(Color.WHITE);
 		btnNewButton_1.setForeground(Color.WHITE);
@@ -303,7 +307,6 @@ public class ClientGui extends JFrame {
 				    		try {
 				    			out = new DataOutputStream(serverSocket.getOutputStream());
 				    			out.write(resolutionID.getBytes());  //set by radio buttons!
-				    			System.out.println("test: "+getDelay(delayTextField.getText().toString()));
 				    			out.write(getDelay(delayTextField.getText().toString()).getBytes()); // 6 BYTES/chars!! range should be 0 - 30000 (30000 equals about 30 seconds)
 				    			out.flush();
 				    		} catch (IOException e1) {
