@@ -113,27 +113,27 @@ public class ClientGui extends JFrame {
 		panel_3.setBackground(new Color(135, 206, 250));
 		panel_3.setLayout(null);
 		
-		JLabel lblIp = new JLabel("I.P");
-		lblIp.setFont(new Font("Nexa Light", Font.PLAIN, 11));
-		lblIp.setBounds(10, 8, 23, 14);
+		JLabel lblIp = new JLabel("I . P");
+		lblIp.setBounds(10, 0, 23, 14);
 		panel_3.add(lblIp);
+		lblIp.setFont(new Font("Nexa Light", Font.PLAIN, 11));
 		lblIp.setForeground(Color.WHITE);
 		
+		JLabel lblPort = new JLabel("P o r t");
+		lblPort.setFont(new Font("Nexa Light", Font.PLAIN, 11));
+		lblPort.setBounds(136, 0, 38, 14);
+		panel_3.add(lblPort);
+		lblPort.setForeground(Color.WHITE);
+		
 		ipTextField = new JTextFieldLimit(14);
-		ipTextField.setBounds(30, 5, 86, 20);
+		ipTextField.setBounds(10, 19, 86, 20);
 		panel_3.add(ipTextField);
 		ipTextField.setColumns(10);
 		
 		portTextField = new JTextFieldLimit(4);
-		portTextField.setBounds(136, 5, 38, 20);
+		portTextField.setBounds(136, 19, 38, 20);
 		panel_3.add(portTextField);
 		portTextField.setColumns(4);
-		
-		JLabel lblPort = new JLabel("P");
-		lblPort.setFont(new Font("Nexa Light", Font.PLAIN, 11));
-		lblPort.setBounds(126, 8, 13, 14);
-		panel_3.add(lblPort);
-		lblPort.setForeground(Color.WHITE);
 		
 		JPanel panel_5 = new JPanel();
 		panel_2.add(panel_5);
@@ -181,21 +181,21 @@ public class ClientGui extends JFrame {
 		delayPanel.setLayout(null);
 		
 		JLabel lblNewLabel = new JLabel("");
-		lblNewLabel.setBounds(22, 0, 50, 50);
+		lblNewLabel.setBounds(10, 0, 50, 50);
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel.setIcon(new ImageIcon(ClientGui.class.getResource("/img/time.png")));
 		delayPanel.add(lblNewLabel);
 		
 		delayTextField = new JTextFieldLimit(4);
-		delayTextField.setBounds(137, 18, 22, 20);
+		delayTextField.setBounds(137, 18, 37, 20);
 		delayTextField.setHorizontalAlignment(SwingConstants.CENTER);
 		delayPanel.add(delayTextField);
 		delayTextField.setColumns(2);
 		
-		JLabel lblNewLabel_2 = new JLabel("Delay ms");
+		JLabel lblNewLabel_2 = new JLabel("D e l a y  m s");
 		lblNewLabel_2.setFont(new Font("Nexa Light", Font.PLAIN, 11));
 		lblNewLabel_2.setForeground(Color.WHITE);
-		lblNewLabel_2.setBounds(77, 22, 50, 14);
+		lblNewLabel_2.setBounds(63, 22, 70, 14);
 		delayPanel.add(lblNewLabel_2);
 		
 		JPanel panel_8 = new JPanel();
@@ -255,9 +255,9 @@ public class ClientGui extends JFrame {
 		panel_2.add(panel_7);
 		panel_7.setLayout(null);
 		
-		JButton btnNewButton_1 = new JButton("Connect");
+		JButton btnNewButton_1 = new JButton("  C o n n e c t");
 		btnNewButton_1.setFont(new Font("Nexa Light", Font.PLAIN, 11));
-		btnNewButton_1.setBounds(31, 0, 120, 49);
+		btnNewButton_1.setBounds(10, 0, 164, 49);
 	
 		btnNewButton_1.setBackground(Color.WHITE);
 		btnNewButton_1.setForeground(Color.WHITE);
