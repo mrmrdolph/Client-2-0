@@ -9,12 +9,15 @@ import java.awt.event.ActionListener;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 
 import javax.imageio.ImageIO;
@@ -43,6 +46,9 @@ public class ServerHolder extends JPanel {
 	private JLabel currentImageJlabel;
 	private JPanel settingsPanel;
 	private JLabel connectedIPPortlabel;
+	private ReceiveImageRunner receiveImageRunnable;
+	private Thread t;
+	private boolean runThrough = false;
 //hzdhsdak
 	/**
 	 * Create the panel.
@@ -118,8 +124,9 @@ public class ServerHolder extends JPanel {
 		/**
 		 * Start receiving from serversocket
 		 */
-		Thread t = new Thread(new ReceiveImageRunner());
-		t.start();
+						this.receiveImageRunnable = new ReceiveImageRunner();
+						this.t = new Thread(this.receiveImageRunnable);
+						t.start();
 	
 	}
 
@@ -143,14 +150,9 @@ public class ServerHolder extends JPanel {
 
 			Image image = null;
 			while (true) {
-//				try {
-//					Thread.sleep(1000);
-//				} catch (InterruptedException e) {
-//					e.printStackTrace();
-//				}
+				if (runThrough) break;
 				if (socket.isConnected()) {
 //					System.out.println("Connected:"+ socket.isConnected());
-	//				image = scaleDown(readImg(socket),50,50);
 					image = readImg(socket);
 					if (image == null) {
 //						System.out.println("image null");
@@ -201,10 +203,79 @@ public class ServerHolder extends JPanel {
 		public BufferedImage readImg(Socket socket) {
 //			System.out.println("START READING");
 			try {
-				BufferedImage buff = ImageIO.read(socket.getInputStream());
+				
+//				return ImageIO.read(socket.getInputStream());
+				
+				/**
+				 * 
+				 */
+			   BufferedInputStream in = new BufferedInputStream(new DataInputStream(socket.getInputStream()));
+			   StringBuffer sb = new StringBuffer();
+			   
+			    for(int i=0; i<6; i++ ) {
+					sb.append((char) in.read());
+			    }
+			    int size = 0;
+			    try {
+			    	size = Integer.parseInt(sb.toString().trim());
+			    } catch (NumberFormatException e) {
+//			    	System.out.println("garbage value");
+			    	return null;
+			    }
+				byte[] buffer = new byte[size];
+//				System.out.println("size from server: "+size);
+			    DataInputStream inp = new DataInputStream(socket.getInputStream());
+			    
+			    for(int i = 0; i < size; i += 1) {
+//			    	System.out.println("inp: "+inp.readByte());
+			    	buffer[i] = inp.readByte();
+			    }
+//			    inp.readFully(buffer, 0, size);
+			    
+				//System.out.println(n);
+//				BufferedImage bufferedImage = null;
+//				  try {
+//			            bufferedImage = ImageIO.read(new ByteArrayInputStream(buffer));
+//			            if (bufferedImage == null) {
+//			            	return null;
+//			            }
+//			        } catch (IOException e) {
+//			            e.printStackTrace();
+//			        }
+//
+//
+//				File outputfile = new File("IMAGEZ.jpg");
+//				ImageIO.write(bufferedImage, "jpg", outputfile);
+
+
+				//return output.toByteArray();
+				
+				/**
+				 *
+				 */
+				
+				
+//				System.out.println("HELLO");
+//				DataInputStream d = new DataInputStream(socket.getInputStream());
+//				System.out.println("HELLO2");
+//				
+//				for(int i=0;i<400;i+=1) {
+//					System.out.println(d.read());
+//					System.out.println("hello11");
+//				}
+//				System.out.println("read done");
 //				System.out.println("END READING");
-				return buff;
-			} catch (IOException e) {
+//				return null;
+//				return buff;
+				return convertBytesToBuffImage(buffer);
+			}  catch (SocketException s) {
+				try {
+					runThrough = true;
+					socket.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				} 
+			} catch(IOException e) {
 				e.printStackTrace();
 			}
 			return null;
