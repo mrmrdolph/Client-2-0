@@ -43,7 +43,7 @@ public class ClientGui extends JFrame {
 	private JRadioButton res4NewRadioButton_3;
 	private String resolutionID = "1";
 
-	/**d
+	/**df
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
