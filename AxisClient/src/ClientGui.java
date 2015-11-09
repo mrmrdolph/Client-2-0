@@ -126,7 +126,7 @@ public class ClientGui extends JFrame {
 		lblPort.setForeground(Color.WHITE);
 		
 		ipTextField = new JTextFieldLimit(14);
-		ipTextField.setBounds(10, 19, 86, 20);
+		ipTextField.setBounds(10, 19, 93, 20);
 		panel_3.add(ipTextField);
 		ipTextField.setColumns(10);
 		
@@ -265,6 +265,7 @@ public class ClientGui extends JFrame {
 	    btnNewButton_1.setBorder(null);
 	
 		btnNewButton_1.setIcon(new ImageIcon(ClientGui.class.getResource("/img/connec.png")));
+		btnNewButton_1.setRolloverIcon(new ImageIcon(ClientGui.class.getResource("/img/connec2.png")));
 		panel_7.add(btnNewButton_1);
 		
 		
