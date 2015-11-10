@@ -117,30 +117,49 @@ public class ClientGui extends JFrame {
 		panel_3.setLayout(null);
 		
 		JLabel lblIp = new JLabel("I . P");
-		lblIp.setBounds(10, 0, 23, 14);
+		lblIp.setBounds(22, 2, 23, 21);
 		panel_3.add(lblIp);
 		lblIp.setFont(new Font("Nexa Light", Font.PLAIN, 11));
 		lblIp.setForeground(Color.WHITE);
 		
 		JLabel lblPort = new JLabel("P o r t");
 		lblPort.setFont(new Font("Nexa Light", Font.PLAIN, 11));
-		lblPort.setBounds(136, 0, 38, 14);
+		lblPort.setBounds(133, 1, 38, 23);
 		panel_3.add(lblPort);
 		lblPort.setForeground(Color.WHITE);
 		
 		ipTextField = new JTextFieldLimit(14);
-		ipTextField.setBounds(10, 19, 93, 20);
+		ipTextField.setBounds(22, 21, 93, 20);
 		panel_3.add(ipTextField);
 		ipTextField.setColumns(10);
 		
 		portTextField = new JTextFieldLimit(4);
-		portTextField.setBounds(136, 19, 38, 20);
+		portTextField.setBounds(131, 21, 38, 20);
 		panel_3.add(portTextField);
 		portTextField.setColumns(4);
 		
 		JPanel panel_5 = new JPanel();
 		panel_2.add(panel_5);
 		panel_5.setBackground(new Color(135, 206, 250));
+		panel_5.setLayout(null);
+		
+		delayTextField = new JTextFieldLimit(4);
+		delayTextField.setBounds(131, 16, 37, 20);
+		panel_5.add(delayTextField);
+		delayTextField.setHorizontalAlignment(SwingConstants.CENTER);
+		delayTextField.setColumns(2);
+		
+		JLabel lblNewLabel = new JLabel("");
+		lblNewLabel.setBounds(16, 0, 32, 53);
+		panel_5.add(lblNewLabel);
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setIcon(new ImageIcon(ClientGui.class.getResource("/img/times.png")));
+		
+		JLabel lblNewLabel_2 = new JLabel("D e l a y   m s");
+		lblNewLabel_2.setBounds(53, 1, 70, 53);
+		panel_5.add(lblNewLabel_2);
+		lblNewLabel_2.setFont(new Font("Nexa Light", Font.PLAIN, 11));
+		lblNewLabel_2.setForeground(Color.WHITE);
 		
 		JPanel panel_6 = new JPanel();
 		panel_6.setBackground(new Color(135, 206, 250));
@@ -183,28 +202,61 @@ public class ClientGui extends JFrame {
 		panel_2.add(delayPanel);
 		delayPanel.setLayout(null);
 		
-		JLabel lblNewLabel = new JLabel("");
-		lblNewLabel.setBounds(10, 0, 50, 50);
-		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setIcon(new ImageIcon(ClientGui.class.getResource("/img/time.png")));
-		delayPanel.add(lblNewLabel);
 		
-		delayTextField = new JTextFieldLimit(4);
-		delayTextField.setBounds(137, 18, 37, 20);
-		delayTextField.setHorizontalAlignment(SwingConstants.CENTER);
-		delayPanel.add(delayTextField);
-		delayTextField.setColumns(2);
-		
-		JLabel lblNewLabel_2 = new JLabel("D e l a y  m s");
-		lblNewLabel_2.setFont(new Font("Nexa Light", Font.PLAIN, 11));
-		lblNewLabel_2.setForeground(Color.WHITE);
-		lblNewLabel_2.setBounds(63, 22, 70, 14);
-		delayPanel.add(lblNewLabel_2);
+		JCheckBox chckbxNewCheckBox = new JCheckBox("   E n c r y p t");
+		chckbxNewCheckBox.setFont(new Font("Nexa Light", Font.PLAIN, 11));
+		chckbxNewCheckBox.setBounds(18, -2, 152, 53);
+		delayPanel.add(chckbxNewCheckBox);
+		chckbxNewCheckBox.setForeground(Color.WHITE);
+		chckbxNewCheckBox.setBackground(new Color(135, 206, 250));
+		chckbxNewCheckBox.setIcon(new ImageIcon (ClientGui.class.getResource("/img/radiounselect.png")));
+		chckbxNewCheckBox.setSelectedIcon(new ImageIcon (ClientGui.class.getResource("/img/cypc.png")));
+		chckbxNewCheckBox.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				if (chckbxNewCheckBox.isSelected()){
+					crypt = "1";
+					System.out.println(crypt);
+				}else{
+					crypt="0";
+					System.out.println(crypt);
+
+				}
+				
+			}
+		});
 		
 		JPanel panel_8 = new JPanel();
 		panel_8.setBackground(new Color(135, 206, 250));
 		panel_2.add(panel_8);
 		panel_8.setLayout(null);
+		
+		JCheckBox chckbxSync = new JCheckBox("   S y n c h r o n i z e");
+		chckbxSync.setFont(new Font("Nexa Light", Font.PLAIN, 11));
+		chckbxSync.setBounds(19, 1, 152, 53);
+		panel_8.add(chckbxSync);
+		chckbxSync.setForeground(Color.WHITE);
+		chckbxSync.setBackground(new Color(135, 206, 250));
+		chckbxSync.setIcon(new ImageIcon (ClientGui.class.getResource("/img/radiounselect.png")));
+		chckbxSync.setSelectedIcon(new ImageIcon (ClientGui.class.getResource("/img/synkc.png")));
+		chckbxSync.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				if (chckbxSync.isSelected()){
+					sync = "1";
+					System.out.println(sync);
+				}else{
+					sync="0";
+					System.out.println(sync);
+
+				}
+				
+			}
+		});
 		
 		JPanel radioButtonPanel = new JPanel();
 		radioButtonPanel.setBackground(new Color(135, 206, 250));
@@ -212,6 +264,7 @@ public class ClientGui extends JFrame {
 		radioButtonPanel.setLayout(new BoxLayout(radioButtonPanel, BoxLayout.Y_AXIS));
 		
 		JLabel lblNewLabel_1 = new JLabel("");
+		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_1.setAlignmentX(Component.CENTER_ALIGNMENT);
 		radioButtonPanel.add(lblNewLabel_1);
 		lblNewLabel_1.setIcon(new ImageIcon(ClientGui.class.getResource("/img/screen.png")));
@@ -253,51 +306,6 @@ public class ClientGui extends JFrame {
 		panel_9.setBackground(new Color(135, 206, 250));
 		panel_2.add(panel_9);
 		panel_9.setLayout(null);
-		
-		JCheckBox chckbxSync = new JCheckBox("Sync");
-		chckbxSync.setForeground(Color.WHITE);
-		chckbxSync.setBackground(new Color(135, 206, 250));
-		chckbxSync.setBounds(102, 21, 63, 23);
-		panel_9.add(chckbxSync);
-		chckbxSync.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				if (chckbxSync.isSelected()){
-					sync = "1";
-					System.out.println(sync);
-				}else{
-					sync="0";
-					System.out.println(sync);
-
-				}
-				
-			}
-		});
-		
-		
-		JCheckBox chckbxNewCheckBox = new JCheckBox("Encrypt");
-		chckbxNewCheckBox.setForeground(Color.WHITE);
-		chckbxNewCheckBox.setBackground(new Color(135, 206, 250));
-		chckbxNewCheckBox.setBounds(16, 21, 77, 23);
-		panel_9.add(chckbxNewCheckBox);
-		chckbxNewCheckBox.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				if (chckbxNewCheckBox.isSelected()){
-					crypt = "1";
-					System.out.println(crypt);
-				}else{
-					crypt="0";
-					System.out.println(crypt);
-
-				}
-				
-			}
-		});
 		
 		
 		
@@ -401,5 +409,12 @@ public class ClientGui extends JFrame {
 		button.setFont(new Font("Nexa Light", Font.PLAIN, 11));
 		
 		return button;
+	}
+	private JCheckBox setCheck (JCheckBox checkButton){
+		ImageIcon FbuttonIcon = new ImageIcon (ClientGui.class.getResource("/img/radiounselect.png"));
+		ImageIcon TbuttonIcon = new ImageIcon (ClientGui.class.getResource("/img/radioselec.png"));
+		checkButton.setIcon(FbuttonIcon);
+		checkButton.setSelectedIcon(TbuttonIcon);
+		return checkButton;
 	}
 }
