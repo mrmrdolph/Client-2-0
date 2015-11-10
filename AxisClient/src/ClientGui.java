@@ -116,8 +116,8 @@ public class ClientGui extends JFrame {
 		panel_3.setBackground(new Color(135, 206, 250));
 		panel_3.setLayout(null);
 		
-		JLabel lblIp = new JLabel("I . P");
-		lblIp.setBounds(22, 2, 23, 21);
+		JLabel lblIp = new JLabel("IP  a d d r e s s");
+		lblIp.setBounds(22, 2, 93, 21);
 		panel_3.add(lblIp);
 		lblIp.setFont(new Font("Nexa Light", Font.PLAIN, 11));
 		lblIp.setForeground(Color.WHITE);
@@ -153,7 +153,7 @@ public class ClientGui extends JFrame {
 		lblNewLabel.setBounds(16, 0, 32, 53);
 		panel_5.add(lblNewLabel);
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setIcon(new ImageIcon(ClientGui.class.getResource("/img/times.png")));
+		lblNewLabel.setIcon(new ImageIcon(ClientGui.class.getResource("/img/clock.png")));
 		
 		JLabel lblNewLabel_2 = new JLabel("D e l a y   m s");
 		lblNewLabel_2.setBounds(53, 1, 70, 53);
