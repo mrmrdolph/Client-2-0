@@ -23,6 +23,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.JCheckBox;
 
 public class ClientGui extends JFrame {
 
@@ -38,6 +39,8 @@ public class ClientGui extends JFrame {
 	private JRadioButton res3NewRadioButton_2;
 	private JRadioButton res4NewRadioButton_3;
 	private String resolutionID = "1";
+	private String sync ="0";
+	private String crypt="0";
 
 	/**df
 	 * Launch the application.
@@ -249,6 +252,55 @@ public class ClientGui extends JFrame {
 		JPanel panel_9 = new JPanel();
 		panel_9.setBackground(new Color(135, 206, 250));
 		panel_2.add(panel_9);
+		panel_9.setLayout(null);
+		
+		JCheckBox chckbxSync = new JCheckBox("Sync");
+		chckbxSync.setForeground(Color.WHITE);
+		chckbxSync.setBackground(new Color(135, 206, 250));
+		chckbxSync.setBounds(102, 21, 63, 23);
+		panel_9.add(chckbxSync);
+		chckbxSync.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				if (chckbxSync.isSelected()){
+					sync = "1";
+					System.out.println(sync);
+				}else{
+					sync="0";
+					System.out.println(sync);
+
+				}
+				
+			}
+		});
+		
+		
+		JCheckBox chckbxNewCheckBox = new JCheckBox("Encrypt");
+		chckbxNewCheckBox.setForeground(Color.WHITE);
+		chckbxNewCheckBox.setBackground(new Color(135, 206, 250));
+		chckbxNewCheckBox.setBounds(16, 21, 77, 23);
+		panel_9.add(chckbxNewCheckBox);
+		chckbxNewCheckBox.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				if (chckbxNewCheckBox.isSelected()){
+					crypt = "1";
+					System.out.println(crypt);
+				}else{
+					crypt="0";
+					System.out.println(crypt);
+
+				}
+				
+			}
+		});
+		
+		
+		
 		
 		JPanel panel_7 = new JPanel();
 		panel_7.setBackground(new Color(135, 206, 250));
@@ -305,6 +357,8 @@ public class ClientGui extends JFrame {
 				    			out = new DataOutputStream(serverSocket.getOutputStream());
 				    			out.write(resolutionID.getBytes());  //set by radio buttons!
 				    			out.write(getDelay(delayTextField.getText().toString()).getBytes()); // 6 BYTES/chars!! range should be 0 - 30000 (30000 equals about 30 seconds)
+				    			//out.write(crypt.getBytes());
+				    			//out.write(sync.getBytes());
 				    			out.flush();
 				    		} catch (IOException e1) {
 				    			e1.printStackTrace();
