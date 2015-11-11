@@ -59,7 +59,7 @@ public class ClientGui extends JFrame {
 	}
 
 	/**d
-	 * Create the frame.
+	 * Create the frame.stuff
 	 */
 	public ClientGui() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
