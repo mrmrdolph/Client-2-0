@@ -2,7 +2,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,25 +11,28 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.security.KeyStore;
+import java.security.KeyStore.PasswordProtection;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableEntryException;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+
+import security.KeyStoreStorage;
+import security.XORCipher;
 
 
 /**
@@ -49,6 +51,9 @@ public class ServerHolder extends JPanel {
 	private ReceiveImageRunner receiveImageRunnable;
 	private Thread t;
 	private boolean runThrough = false;
+	private boolean crypt = false;
+	private KeyStore keyStore;
+	private PasswordProtection keyPassword;
 //hzdhsdak
 	/**
 	 * Create the panel.
@@ -56,12 +61,18 @@ public class ServerHolder extends JPanel {
 	 * @throws IOException
 	 * @throws UnknownHostException
 	 */
-	public ServerHolder(Socket s, String ip, int port) {
+	public ServerHolder(Socket s, String ip, int port, String crypt, KeyStore keyStore, PasswordProtection keyPassword) {
 		
 		this.socket = s;
 		this.serverIP = ip;
 		this.port = port;
-			
+		if (crypt.equals("1")) {
+			this.crypt = true;
+		} else {
+			this.crypt = false;
+		}
+		this.keyStore = keyStore;
+		this.keyPassword = keyPassword;
 	
 		
 		this.setMinimumSize(new Dimension(300, 200));
@@ -230,43 +241,13 @@ public class ServerHolder extends JPanel {
 //			    	System.out.println("inp: "+inp.readByte());
 			    	buffer[i] = inp.readByte();
 			    }
-//			    inp.readFully(buffer, 0, size);
 			    
-				//System.out.println(n);
-//				BufferedImage bufferedImage = null;
-//				  try {
-//			            bufferedImage = ImageIO.read(new ByteArrayInputStream(buffer));
-//			            if (bufferedImage == null) {
-//			            	return null;
-//			            }
-//			        } catch (IOException e) {
-//			            e.printStackTrace();
-//			        }
-//
-//
-//				File outputfile = new File("IMAGEZ.jpg");
-//				ImageIO.write(bufferedImage, "jpg", outputfile);
-
-
-				//return output.toByteArray();
-				
-				/**
-				 *
-				 */
-				
-				
-//				System.out.println("HELLO");
-//				DataInputStream d = new DataInputStream(socket.getInputStream());
-//				System.out.println("HELLO2");
-//				
-//				for(int i=0;i<400;i+=1) {
-//					System.out.println(d.read());
-//					System.out.println("hello11");
-//				}
-//				System.out.println("read done");
-//				System.out.println("END READING");
-//				return null;
-//				return buff;
+			    /**
+			     * Decryption if necessary.
+			     */
+			    if (crypt) {
+			    	buffer = XORCipher.crypt(buffer, KeyStoreStorage.retrieveKey(keyStore, keyPassword).getBytes());
+			    }
 				return convertBytesToBuffImage(buffer);
 			}  catch (SocketException s) {
 				try {
@@ -276,6 +257,15 @@ public class ServerHolder extends JPanel {
 					e.printStackTrace();
 				} 
 			} catch(IOException e) {
+				e.printStackTrace();
+			} catch (NoSuchAlgorithmException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (UnrecoverableEntryException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (KeyStoreException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			return null;

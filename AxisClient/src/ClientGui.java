@@ -7,14 +7,22 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedInputStream;
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.security.KeyStore;
+import java.security.KeyStore.PasswordProtection;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
 
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -23,7 +31,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JCheckBox;
+
+import security.KeyStoreStorage;
 
 public class ClientGui extends JFrame {
 
@@ -41,6 +50,7 @@ public class ClientGui extends JFrame {
 	private String resolutionID = "1";
 	private String sync ="0";
 	private String crypt="0";
+	private KeyStore keyStore;
 
 	/**df
 	 * Launch the application.
@@ -62,6 +72,11 @@ public class ClientGui extends JFrame {
 	 * Create the frame.stuff
 	 */
 	public ClientGui() {
+		try {
+			this.keyStore = KeyStoreStorage.createKeyStore(KeyStoreStorage.KEYSTOREFILENAME, KeyStoreStorage.KEYSTOREPW);
+		} catch (Exception e2) {
+			e2.printStackTrace();
+		}
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 969, 649);
 		this.setResizable(true);
@@ -361,17 +376,30 @@ public class ClientGui extends JFrame {
 				        }
 				        if (socketConnected) {
 				        	DataOutputStream out = null;
+				        	PasswordProtection keyPassword = null;
 				    		try {
 				    			out = new DataOutputStream(serverSocket.getOutputStream());
 				    			out.write(resolutionID.getBytes());  //set by radio buttons!
 				    			out.write(getDelay(delayTextField.getText().toString()).getBytes()); // 6 BYTES/chars!! range should be 0 - 30000 (30000 equals about 30 seconds)
-				    			//out.write(crypt.getBytes());
-				    			//out.write(sync.getBytes());
+				    			out.write(crypt.getBytes());
+				    			out.write(sync.getBytes());
 				    			out.flush();
-				    		} catch (IOException e1) {
+				    			
+				    			/**
+				    			 * Get key for encryption
+				    			 */
+				    			   BufferedInputStream in = new BufferedInputStream(new DataInputStream(serverSocket.getInputStream()));
+				    			   StringBuffer sb = new StringBuffer();
+				    			   
+				    			    for(int i=0; i<8; i++) {
+				    					sb.append((char) in.read());
+				    			    }
+				    			    keyPassword = KeyStoreStorage.storeKey(sb.toString().getBytes(), keyStore, KeyStoreStorage.KEYSTOREFILENAME);
+				    			    System.out.println("Unique Cipher XOR Key received from Server:" + sb.toString());
+				    		} catch (IOException | KeyStoreException | NoSuchAlgorithmException | CertificateException e1) {
 				    			e1.printStackTrace();
 				    		}
-				        	ServerHolder server = new ServerHolder(serverSocket, ipTextField.getText(),Integer.parseInt(portTextField.getText()));
+				        	ServerHolder server = new ServerHolder(serverSocket, ipTextField.getText(),Integer.parseInt(portTextField.getText()), crypt, keyStore, keyPassword);
 				        	panel.add(server);
 				        }
 				        panel.validate();
