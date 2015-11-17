@@ -54,6 +54,7 @@ public class ServerHolder extends JPanel {
 	private boolean crypt = false;
 	private KeyStore keyStore;
 	private PasswordProtection keyPassword;
+	private String entryname;
 //hzdhsdak
 	/**
 	 * Create the panel.
@@ -61,8 +62,7 @@ public class ServerHolder extends JPanel {
 	 * @throws IOException
 	 * @throws UnknownHostException
 	 */
-	public ServerHolder(Socket s, String ip, int port, String crypt, KeyStore keyStore, PasswordProtection keyPassword) {
-		
+	public ServerHolder(Socket s, String ip, int port, String crypt, KeyStore keyStore, PasswordProtection keyPassword, String sb) {
 		this.socket = s;
 		this.serverIP = ip;
 		this.port = port;
@@ -73,6 +73,7 @@ public class ServerHolder extends JPanel {
 		}
 		this.keyStore = keyStore;
 		this.keyPassword = keyPassword;
+		this.entryname = sb;
 	
 		
 		this.setMinimumSize(new Dimension(300, 200));
@@ -168,8 +169,6 @@ public class ServerHolder extends JPanel {
 					if (image == null) {
 //						System.out.println("image null");
 						continue;
-					} else  {
-						
 					}
 					System.out.println("image received: "+image.toString());
 				} else {
@@ -246,7 +245,7 @@ public class ServerHolder extends JPanel {
 			     * Decryption if necessary.
 			     */
 			    if (crypt) {
-			    	buffer = XORCipher.crypt(buffer, KeyStoreStorage.retrieveKey(keyStore, keyPassword).getBytes());
+			    	buffer = XORCipher.crypt(buffer, KeyStoreStorage.retrieveKey(keyStore, keyPassword, entryname).getBytes());
 			    }
 				return convertBytesToBuffImage(buffer);
 			}  catch (SocketException s) {
@@ -258,14 +257,12 @@ public class ServerHolder extends JPanel {
 				} 
 			} catch(IOException e) {
 				e.printStackTrace();
-			} catch (NoSuchAlgorithmException e) {
-				// TODO Auto-generated catch block
+			} 
+			catch (NoSuchAlgorithmException e) {
 				e.printStackTrace();
 			} catch (UnrecoverableEntryException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (KeyStoreException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			return null;

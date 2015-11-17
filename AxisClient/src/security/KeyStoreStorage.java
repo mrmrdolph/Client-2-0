@@ -36,10 +36,10 @@ public class KeyStoreStorage {
 
 		//SAVE KEYSTORE WITH CIPHER
         byte[] cipherKey = "kjas8d73jf".getBytes();
-        PasswordProtection keyPassword = storeKey(cipherKey, keyStore, KEYSTOREFILENAME);
+        PasswordProtection keyPassword = storeKey(cipherKey, keyStore, KEYSTOREFILENAME, "pass", "entryname");
         
         //RETRIEVE KEY
-        System.out.println(retrieveKey(keyStore, keyPassword));
+        System.out.println(retrieveKey(keyStore, keyPassword, "entryname"));
     }
     
 	/**
@@ -74,11 +74,11 @@ public class KeyStoreStorage {
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	public static PasswordProtection storeKey(byte[] key, KeyStore keyStore, String keyStoreFilename) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, FileNotFoundException, IOException {
+	public static PasswordProtection storeKey(byte[] key, KeyStore keyStore, String keyStoreFilename, String password, String entryname) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, FileNotFoundException, IOException {
         SecretKey secretKey = new SecretKeySpec(key, 0, key.length, "AES");
         KeyStore.SecretKeyEntry keyStoreEntry = new KeyStore.SecretKeyEntry(secretKey);
-        PasswordProtection keyPassword = new PasswordProtection("pw-secret".toCharArray());
-        keyStore.setEntry(ENTRYNAME, keyStoreEntry, keyPassword);
+        PasswordProtection keyPassword = new PasswordProtection(password.toCharArray());
+        keyStore.setEntry(entryname, keyStoreEntry, keyPassword);
         keyStore.store(new FileOutputStream(keyStoreFilename), KEYSTOREPW.toCharArray());
         return keyPassword;
     }
@@ -92,8 +92,8 @@ public class KeyStoreStorage {
 	 * @throws UnrecoverableEntryException
 	 * @throws KeyStoreException
 	 */
-    public static String retrieveKey(KeyStore keyStore, PasswordProtection keyPassword) throws NoSuchAlgorithmException, UnrecoverableEntryException, KeyStoreException {
-    	KeyStore.Entry entry = keyStore.getEntry(ENTRYNAME, keyPassword);
+    public static String retrieveKey(KeyStore keyStore, PasswordProtection keyPassword, String entryname) throws NoSuchAlgorithmException, UnrecoverableEntryException, KeyStoreException {
+    	KeyStore.Entry entry = keyStore.getEntry(entryname, keyPassword);
     	SecretKey keyFound = ((KeyStore.SecretKeyEntry) entry).getSecretKey();
     	return new String(keyFound.getEncoded());
     }

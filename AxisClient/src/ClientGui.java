@@ -17,6 +17,7 @@ import java.security.KeyStore.PasswordProtection;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
+import java.util.Random;
 
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -377,6 +378,7 @@ public class ClientGui extends JFrame {
 				        if (socketConnected) {
 				        	DataOutputStream out = null;
 				        	PasswordProtection keyPassword = null;
+				        	StringBuffer sb = null;
 				    		try {
 				    			out = new DataOutputStream(serverSocket.getOutputStream());
 				    			out.write(resolutionID.getBytes());  //set by radio buttons!
@@ -389,17 +391,17 @@ public class ClientGui extends JFrame {
 				    			 * Get key for encryption
 				    			 */
 				    			   BufferedInputStream in = new BufferedInputStream(new DataInputStream(serverSocket.getInputStream()));
-				    			   StringBuffer sb = new StringBuffer();
+				    			   sb = new StringBuffer();
 				    			   
 				    			    for(int i=0; i<8; i++) {
 				    					sb.append((char) in.read());
 				    			    }
-				    			    keyPassword = KeyStoreStorage.storeKey(sb.toString().getBytes(), keyStore, KeyStoreStorage.KEYSTOREFILENAME);
+				    			    keyPassword = KeyStoreStorage.storeKey(sb.toString().getBytes(), keyStore, KeyStoreStorage.KEYSTOREFILENAME, sb.toString(), sb.toString());
 				    			    System.out.println("Unique Cipher XOR Key received from Server:" + sb.toString());
 				    		} catch (IOException | KeyStoreException | NoSuchAlgorithmException | CertificateException e1) {
 				    			e1.printStackTrace();
 				    		}
-				        	ServerHolder server = new ServerHolder(serverSocket, ipTextField.getText(),Integer.parseInt(portTextField.getText()), crypt, keyStore, keyPassword);
+				        	ServerHolder server = new ServerHolder(serverSocket, ipTextField.getText(),Integer.parseInt(portTextField.getText()), crypt, keyStore, keyPassword, sb.toString());
 				        	panel.add(server);
 				        }
 				        panel.validate();
