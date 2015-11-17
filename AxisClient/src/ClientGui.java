@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedInputStream;
@@ -17,7 +18,8 @@ import java.security.KeyStore.PasswordProtection;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
-import java.util.Random;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -49,9 +51,10 @@ public class ClientGui extends JFrame {
 	private JRadioButton res3NewRadioButton_2;
 	private JRadioButton res4NewRadioButton_3;
 	private String resolutionID = "1";
-	private String sync ="0";
-	private String crypt="0";
+	private String sync = "0";
+	private String crypt= "0";
 	private KeyStore keyStore;
+	private ArrayList<ServerHolder> serverHolders;
 
 	/**df
 	 * Launch the application.
@@ -69,6 +72,10 @@ public class ClientGui extends JFrame {
 		});
 	}
 
+	public void removeFromServerHolder(ServerHolder sh) {
+		this.serverHolders.remove(sh);
+	}
+	
 	/**d
 	 * Create the frame.stuff
 	 */
@@ -78,6 +85,7 @@ public class ClientGui extends JFrame {
 		} catch (Exception e2) {
 			e2.printStackTrace();
 		}
+		this.serverHolders = new ArrayList<ServerHolder>();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 969, 649);
 		this.setResizable(true);
@@ -401,8 +409,47 @@ public class ClientGui extends JFrame {
 				    		} catch (IOException | KeyStoreException | NoSuchAlgorithmException | CertificateException e1) {
 				    			e1.printStackTrace();
 				    		}
-				        	ServerHolder server = new ServerHolder(serverSocket, ipTextField.getText(),Integer.parseInt(portTextField.getText()), crypt, keyStore, keyPassword, sb.toString());
+				        	ServerHolder server = new ServerHolder(serverSocket, ipTextField.getText(),Integer.parseInt(portTextField.getText()), crypt, keyStore, keyPassword, sb.toString(), sync);
+				        	serverHolders.add(server);
+				        	
 				        	panel.add(server);
+				        	//start synchronization checks
+				        	if (sync.equals("1")) {
+					        	new Thread(new Runnable() {
+									
+									@Override
+									public void run() {
+										int filledBuffers = 0;
+										while(true) {
+											try {
+												Thread.sleep(100);
+											} catch (InterruptedException e) {
+												e.printStackTrace();
+											}
+											Iterator<ServerHolder> it = serverHolders.iterator();
+											ServerHolder sh = null;
+											
+											while(it.hasNext()) {
+												sh = it.next();
+												if (sh.getImageBuffer().getBufferLength() > 0) {
+													filledBuffers += 1;
+												}
+											}
+											if (filledBuffers == serverHolders.size()) {
+												System.out.println("All buffers filled with at least 1 image: showing now");
+												it = serverHolders.iterator();
+												ServerHolder sh2 = null;
+												
+												while(it.hasNext()) {
+													sh2 = it.next();
+													sh2.setImage(sh2.getImageBuffer().getNextImage());
+												}
+											}
+											filledBuffers = 0;
+										}
+									}
+								}).start();
+				        	}
 				        }
 				        panel.validate();
 				        searching = false;

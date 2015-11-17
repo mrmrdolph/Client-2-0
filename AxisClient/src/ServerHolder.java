@@ -1,3 +1,6 @@
+import imagebuffer.IImageSyncBuffer;
+import imagebuffer.ImageSyncBuffer;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
@@ -55,6 +58,8 @@ public class ServerHolder extends JPanel {
 	private KeyStore keyStore;
 	private PasswordProtection keyPassword;
 	private String entryname;
+	private IImageSyncBuffer buffer;
+	private String sync;
 //hzdhsdak
 	/**
 	 * Create the panel.
@@ -62,7 +67,7 @@ public class ServerHolder extends JPanel {
 	 * @throws IOException
 	 * @throws UnknownHostException
 	 */
-	public ServerHolder(Socket s, String ip, int port, String crypt, KeyStore keyStore, PasswordProtection keyPassword, String sb) {
+	public ServerHolder(Socket s, String ip, int port, String crypt, KeyStore keyStore, PasswordProtection keyPassword, String sb, String sync) {
 		this.socket = s;
 		this.serverIP = ip;
 		this.port = port;
@@ -75,6 +80,8 @@ public class ServerHolder extends JPanel {
 		this.keyPassword = keyPassword;
 		this.entryname = sb;
 	
+		this.buffer = new ImageSyncBuffer();
+		this.sync = sync;
 		
 		this.setMinimumSize(new Dimension(300, 200));
 		//rtprwrwwpoå
@@ -134,22 +141,38 @@ public class ServerHolder extends JPanel {
 		
 
 		/**
-		 * Start receiving from serversocket
+		 * Start receiving from serversocket an infinite thread
 		 */
-						this.receiveImageRunnable = new ReceiveImageRunner();
-						this.t = new Thread(this.receiveImageRunnable);
-						t.start();
+		this.receiveImageRunnable = new ReceiveImageRunner();
+		this.t = new Thread(this.receiveImageRunnable);
+		this.t.start();
 	
 	}
 
 	private void deleteMe() {
 		Container parent = btnRemove.getParent().getParent(); //if not working add another getParent(), cant have enough parents
 		Container parentparent = parent.getParent(); 
+		
+		//remove from arraylist in clientgui
+		((ClientGui) parentparent.getParent().getParent().getParent().getParent().getParent().getParent()).removeFromServerHolder(this);
+
+		//remove from gui
 		parentparent.remove(parent);
 		parentparent.validate();
 		parentparent.repaint();
+
 	}
 
+	public IImageSyncBuffer getImageBuffer() {
+		return this.buffer;
+	}
+	
+	public void setImage(Image img) {
+		ImageIcon imgIcon = new ImageIcon(img);
+		currentImageJlabel.setIcon(imgIcon);
+		currentImageJlabel.validate();
+	}
+	
 	private class ReceiveImageRunner implements Runnable {
 
 		@Override
@@ -170,14 +193,19 @@ public class ServerHolder extends JPanel {
 //						System.out.println("image null");
 						continue;
 					}
+					if (sync.equals("1")) {
+						buffer.addImage(image);
+					}
 					System.out.println("image received: "+image.toString());
 				} else {
 					System.out.println("Not connected to socket");
 				}
-				ImageIcon imgIcon = new ImageIcon(image);
-	
-				currentImageJlabel.setIcon(imgIcon);
-				currentImageJlabel.validate();
+				if (sync.equals("0")) {
+					setImage(image);
+				}
+//				ImageIcon imgIcon = new ImageIcon(image);
+//				currentImageJlabel.setIcon(imgIcon);
+//				currentImageJlabel.validate();
 			}
 
  
