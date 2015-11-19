@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedInputStream;
@@ -33,6 +32,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 import security.KeyStoreStorage;
@@ -421,11 +421,14 @@ public class ClientGui extends JFrame {
 									public void run() {
 										int filledBuffers = 0;
 										while(true) {
-											try {
-												Thread.sleep(100);
-											} catch (InterruptedException e) {
-												e.printStackTrace();
+											if (serverHolders.size() == 0) {
+												break;
 											}
+//											try {
+//												Thread.sleep(100);
+//											} catch (InterruptedException e) {
+//												e.printStackTrace();
+//											}
 											Iterator<ServerHolder> it = serverHolders.iterator();
 											ServerHolder sh = null;
 											
@@ -435,7 +438,7 @@ public class ClientGui extends JFrame {
 													filledBuffers += 1;
 												}
 											}
-											if (filledBuffers == serverHolders.size()) {
+											if (filledBuffers == serverHolders.size() && filledBuffers > 0) {
 												System.out.println("All buffers filled with at least 1 image: showing now");
 												it = serverHolders.iterator();
 												ServerHolder sh2 = null;
@@ -443,6 +446,7 @@ public class ClientGui extends JFrame {
 												while(it.hasNext()) {
 													sh2 = it.next();
 													sh2.setImage(sh2.getImageBuffer().getNextImage());
+//												    SwingUtilities.invokeLater(new ImageSetterRunnable(sh2));
 												}
 											}
 											filledBuffers = 0;
@@ -461,9 +465,21 @@ public class ClientGui extends JFrame {
 		});
 	
 		
+	}
+
 	
+	public class ImageSetterRunnable implements Runnable {
 		
-	
+		private ServerHolder sh;
+		
+		public ImageSetterRunnable(ServerHolder sh) {
+			this.sh = sh;
+		}
+		
+		@Override
+		public void run() {
+			sh.setImage(sh.getImageBuffer().getNextImage());
+		}
 		
 	}
 	
