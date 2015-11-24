@@ -18,6 +18,7 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 
 import javax.swing.BoxLayout;
@@ -55,6 +56,7 @@ public class ClientGui extends JFrame {
 	private String crypt= "0";
 	private KeyStore keyStore;
 	private ArrayList<ServerHolder> serverHolders;
+	private boolean syncThreadRunning = false;
 
 	/**df
 	 * Launch the application.
@@ -414,12 +416,14 @@ public class ClientGui extends JFrame {
 				        	
 				        	panel.add(server);
 				        	//start synchronization checks
-				        	if (sync.equals("1")) {
+				        	if (sync.equals("1") && !syncThreadRunning) {
 					        	new Thread(new Runnable() {
 									
 									@Override
 									public void run() {
 										int filledBuffers = 0;
+										syncThreadRunning = true;
+										System.out.println("RUN THREAD");
 										while(true) {
 											if (serverHolders.size() == 0) {
 												break;
@@ -433,9 +437,15 @@ public class ClientGui extends JFrame {
 											ServerHolder sh = null;
 											
 											while(it.hasNext()) {
-												sh = it.next();
-												if (sh.getImageBuffer().getBufferLength() > 0) {
-													filledBuffers += 1;
+												try {
+													sh = it.next();
+													if (sh.getImageBuffer().getBufferLength() > 0) {
+														filledBuffers += 1;
+													}
+												} catch (ConcurrentModificationException e) {
+//													e.printStackTrace();
+													System.out.println("ConcurrentModificationException");
+													continue;
 												}
 											}
 											if (filledBuffers == serverHolders.size() && filledBuffers > 0) {
@@ -451,6 +461,7 @@ public class ClientGui extends JFrame {
 											}
 											filledBuffers = 0;
 										}
+										syncThreadRunning = false;
 									}
 								}).start();
 				        	}
