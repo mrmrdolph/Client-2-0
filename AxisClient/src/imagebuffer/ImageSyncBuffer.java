@@ -7,6 +7,7 @@ import java.util.Queue;
 
 public class ImageSyncBuffer implements IImageSyncBuffer{
 	private Queue<ImageContainer> buffer;
+	private int lastDisplayedId = 0;
 	
 	/**
 	 * Example usage
@@ -70,14 +71,33 @@ public class ImageSyncBuffer implements IImageSyncBuffer{
 			
 		}
 		buffer.remove(next);
+		this.lastDisplayedId = next.id;
 		return next.img;
 //		return buffer.poll().img;
 	}
 	
-
+	public int getLastDisplayedId() {
+		return this.lastDisplayedId;
+	}
+	
 	@Override
 	public int getBufferLength() {
 		return buffer.size();
+	}
+	
+	public int getSmallestId() {
+		if (getBufferLength() <= 0)
+			return -1;
+		//last change
+		Iterator<ImageContainer> it = buffer.iterator();
+		ImageContainer next = it.next();
+		while(it.hasNext()) {
+			ImageContainer nextnext = it.next();
+			if (nextnext.id < next.id) { 
+				next = nextnext;
+			}
+		}
+		return next.id;
 	}
 	
 	

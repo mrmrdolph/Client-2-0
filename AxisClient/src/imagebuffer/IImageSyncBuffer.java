@@ -7,5 +7,6 @@ public interface IImageSyncBuffer {
 	public void addImage(ImageContainer img);
 	public Image getNextImage();
 	public int getBufferLength();
-	
+	public int getLastDisplayedId();
+	public int getSmallestId();
 }
