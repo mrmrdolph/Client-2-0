@@ -1,12 +1,12 @@
 package imagebuffer;
 import java.awt.Image;
-import java.util.Date;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 
 
 public class ImageSyncBuffer implements IImageSyncBuffer{
-	private Queue<Image> buffer;
+	private Queue<ImageContainer> buffer;
 	
 	/**
 	 * Example usage
@@ -47,31 +47,31 @@ public class ImageSyncBuffer implements IImageSyncBuffer{
 	}
 	
 	public ImageSyncBuffer() {
-		buffer = new LinkedList<Image>();
+		buffer = new LinkedList<ImageContainer>();
 	}
 
 	@Override
-	public void addImage(Image img) {
-		buffer.add(img);
+	public void addImage(ImageContainer imgContainer) {
+		buffer.add(imgContainer);
 	}
 
 	@Override
 	public Image getNextImage() {
 		if (getBufferLength() <= 0)
 			return null;
-//		Iterator<Image> it = buffer.iterator();
-//		Image next = it.next();
-//		while(it.hasNext()) {
-//			Image nextnext = it.next();
-//			if (nextnext.getDate().before(next.getDate())) { //TODO: CHECK WHAT getDate().before(..) returns!!
-//				next = nextnext;
-//			}
-//			
-//		}
-//		buffer.remove(next);
-//		return next;
-		return buffer.poll();
-		
+		//last change
+		Iterator<ImageContainer> it = buffer.iterator();
+		ImageContainer next = it.next();
+		while(it.hasNext()) {
+			ImageContainer nextnext = it.next();
+			if (nextnext.id < next.id) { 
+				next = nextnext;
+			}
+			
+		}
+		buffer.remove(next);
+		return next.img;
+//		return buffer.poll().img;
 	}
 	
 
@@ -81,9 +81,9 @@ public class ImageSyncBuffer implements IImageSyncBuffer{
 	}
 	
 	
-	public boolean sameSecond(Date date, Date date2) {
-		return false;
-	}
+//	public boolean sameSecond(Date date, Date date2) {
+//		return false;
+//	}
 	
 
 }

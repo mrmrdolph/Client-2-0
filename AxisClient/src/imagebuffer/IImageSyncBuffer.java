@@ -4,7 +4,7 @@ import java.awt.Image;
 
 
 public interface IImageSyncBuffer {
-	public void addImage(Image img);
+	public void addImage(ImageContainer img);
 	public Image getNextImage();
 	public int getBufferLength();
 	

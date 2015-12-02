@@ -1,4 +1,5 @@
 import imagebuffer.IImageSyncBuffer;
+import imagebuffer.ImageContainer;
 import imagebuffer.ImageSyncBuffer;
 
 import java.awt.Color;
@@ -188,13 +189,14 @@ public class ServerHolder extends JPanel {
 				if (runThrough) break;
 				if (socket.isConnected()) {
 //					System.out.println("Connected:"+ socket.isConnected());
-					image = readImg(socket);
+					ImageContainer imageCont = readImg(socket);
+					image = imageCont.img;
 					if (image == null) {
 //						System.out.println("image null");
 						continue;
 					}
 					if (sync.equals("1")) {
-						buffer.addImage(image);
+						buffer.addImage(imageCont);
 					}
 					System.out.println("image received: "+image.toString());
 				} else {
@@ -238,16 +240,34 @@ public class ServerHolder extends JPanel {
 		}
 
 		
-		public BufferedImage readImg(Socket socket) {
+		public ImageContainer readImg(Socket socket) {
 //			System.out.println("START READING");
 			try {
 				
 //				return ImageIO.read(socket.getInputStream());
 				
 				/**
-				 * 
+				 * Get ORDER ID of image 
 				 */
-			   BufferedInputStream in = new BufferedInputStream(new DataInputStream(socket.getInputStream()));
+				BufferedInputStream in = new BufferedInputStream(new DataInputStream(socket.getInputStream()));
+				StringBuffer sbId = new StringBuffer();
+				
+				for(int i=0; i<6; i++ ) {
+					sbId.append((char) in.read());
+				}
+				int orderId = 0;
+				try {
+					orderId = Integer.parseInt(sbId.toString().trim());
+				} catch (NumberFormatException e) {
+//			    	System.out.println("garbage value");
+					return null;
+				}
+				
+				
+				/**
+				 * Get Size of image 
+				 */
+//			   BufferedInputStream in = new BufferedInputStream(new DataInputStream(socket.getInputStream()));
 			   StringBuffer sb = new StringBuffer();
 			   
 			    for(int i=0; i<6; i++ ) {
@@ -275,7 +295,7 @@ public class ServerHolder extends JPanel {
 			    if (crypt) {
 			    	buffer = XORCipher.crypt(buffer, KeyStoreStorage.retrieveKey(keyStore, keyPassword, entryname).getBytes());
 			    }
-				return convertBytesToBuffImage(buffer);
+				return new ImageContainer(convertBytesToBuffImage(buffer), orderId);
 			}  catch (SocketException s) {
 				try {
 					runThrough = true;
@@ -298,4 +318,6 @@ public class ServerHolder extends JPanel {
 
 	}
 
+
+	
 }
