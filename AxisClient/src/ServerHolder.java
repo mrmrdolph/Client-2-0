@@ -190,11 +190,15 @@ public class ServerHolder extends JPanel {
 				if (socket.isConnected()) {
 //					System.out.println("Connected:"+ socket.isConnected());
 					ImageContainer imageCont = readImg(socket);
-					image = imageCont.img;
-					if (image == null) {
-//						System.out.println("image null");
+					try {
+						if (imageCont.img == null) {
+	//						System.out.println("image null");
+							continue;
+						}
+					} catch (NullPointerException e) {
 						continue;
 					}
+					image = imageCont.img;
 					if (sync.equals("1")) {
 						buffer.addImage(imageCont);
 					}
@@ -249,35 +253,35 @@ public class ServerHolder extends JPanel {
 				/**
 				 * Get ORDER ID of image 
 				 */
-				BufferedInputStream in = new BufferedInputStream(new DataInputStream(socket.getInputStream()));
-				StringBuffer sbId = new StringBuffer();
-				
-				for(int i=0; i<6; i++ ) {
-					sbId.append((char) in.read());
-				}
+//				BufferedInputStream in = new BufferedInputStream(new DataInputStream(socket.getInputStream()));
+//				StringBuffer sbId = new StringBuffer();
+//				
+//				for (int i=0; i<6; i++) {
+//					sbId.append((char) in.read());
+//				}
 				int orderId = 0;
-				try {
-					orderId = Integer.parseInt(sbId.toString().trim());
-				} catch (NumberFormatException e) {
-//			    	System.out.println("garbage value");
-					return null;
-				}
-				
-				
+//				System.out.println("orderId: "+sbId);
+//				try {
+//					orderId = Integer.parseInt(sbId.toString().trim());
+//				} catch (NumberFormatException e) {
+//			    	System.out.println("garbage value1");
+//					return null;
+//				}
 				/**
 				 * Get Size of image 
 				 */
-//			   BufferedInputStream in = new BufferedInputStream(new DataInputStream(socket.getInputStream()));
+			   BufferedInputStream in2 = new BufferedInputStream(new DataInputStream(socket.getInputStream()));
 			   StringBuffer sb = new StringBuffer();
 			   
-			    for(int i=0; i<6; i++ ) {
-					sb.append((char) in.read());
+			    for(int i=0; i<6; i++) {
+					sb.append((char) in2.read());
 			    }
 			    int size = 0;
+//			    System.out.println("image size: "+sb);
 			    try {
 			    	size = Integer.parseInt(sb.toString().trim());
 			    } catch (NumberFormatException e) {
-//			    	System.out.println("garbage value");
+//			    	System.out.println("garbage value2");
 			    	return null;
 			    }
 				byte[] buffer = new byte[size];
@@ -295,6 +299,7 @@ public class ServerHolder extends JPanel {
 			    if (crypt) {
 			    	buffer = XORCipher.crypt(buffer, KeyStoreStorage.retrieveKey(keyStore, keyPassword, entryname).getBytes());
 			    }
+			    System.out.println("\n\n");
 				return new ImageContainer(convertBytesToBuffImage(buffer), orderId);
 			}  catch (SocketException s) {
 				try {

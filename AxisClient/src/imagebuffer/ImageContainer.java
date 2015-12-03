@@ -1,5 +1,5 @@
 package imagebuffer;
-import java.awt.Image;
+import java.awt.image.BufferedImage;
 
 	/**
 	 * To pass the image and id to another function
@@ -7,11 +7,13 @@ import java.awt.Image;
 	 *
 	 */
 	public class ImageContainer {
-		public Image img;
+		public BufferedImage img;
 		public int id;
 		
-		public ImageContainer(Image img, int id) {
-			this.img = img;
-			this.id = id;
+		public ImageContainer(BufferedImage imgg, int idd) {
+			this.img = imgg;
+			this.id = idd;
 		}
+		
+		
 	}

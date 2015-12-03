@@ -61,19 +61,19 @@ public class ImageSyncBuffer implements IImageSyncBuffer{
 		if (getBufferLength() <= 0)
 			return null;
 		//last change
-		Iterator<ImageContainer> it = buffer.iterator();
-		ImageContainer next = it.next();
-		while(it.hasNext()) {
-			ImageContainer nextnext = it.next();
-			if (nextnext.id < next.id) { 
-				next = nextnext;
-			}
-			
-		}
-		buffer.remove(next);
-		this.lastDisplayedId = next.id;
-		return next.img;
-//		return buffer.poll().img;
+//		Iterator<ImageContainer> it = buffer.iterator();
+//		ImageContainer next = it.next();
+//		while(it.hasNext()) {
+//			ImageContainer nextnext = it.next();
+//			if (nextnext.id < next.id) { 
+//				next = nextnext;
+//			}
+//			
+//		}
+//		buffer.remove(next);
+//		this.lastDisplayedId = next.id;
+//		return next.img;
+		return buffer.poll().img;
 	}
 	
 	public int getLastDisplayedId() {

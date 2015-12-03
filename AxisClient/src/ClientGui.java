@@ -441,7 +441,8 @@ public class ClientGui extends JFrame {
 													sh = it.next();
 													//Making sure buffer is filled with at least one
 													//and that order is correct
-													if (sh.getImageBuffer().getBufferLength() > 0 && (sh.getImageBuffer().getLastDisplayedId() + 1) == sh.getImageBuffer().getSmallestId()) {
+//													if (sh.getImageBuffer().getBufferLength() > 0 && (sh.getImageBuffer().getLastDisplayedId() + 1) == sh.getImageBuffer().getSmallestId()) {
+													if (sh.getImageBuffer().getBufferLength() > 0) {
 														filledBuffers += 1;
 													}
 												} catch (ConcurrentModificationException e) {
